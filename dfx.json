@@ -1,0 +1,18 @@
+{
+  "canisters": {
+    "dice_roller": {
+      "frontend": {
+        "entrypoint": "dist/index.html"
+      },
+      "source": ["dist/assets", "dist/vite.svg"],
+      "type": "assets"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "version": 1
+}
