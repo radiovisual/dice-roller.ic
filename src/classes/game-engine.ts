@@ -1,32 +1,18 @@
-import { PLAY_MODE, ACTION_TYPE } from "../constants";
-import { GameAction, Player } from "../types";
 import { nanoid } from "nanoid";
-import { EventEmitter, type EventCallback } from "./event-emitter";
-
-const noop = () => {};
+import { ACTION_TYPE } from "../constants";
+import { GameAction } from "../types";
+import { EventData, EventEmitter, type EventCallback } from "./event-emitter";
 
 export class GameEngine {
-  private players: Player[];
-  private currentPlayerIndex = 0;
-  private rollCount = 0;
-  private skipCount = 0;
-  private playMode: string;
-  private actionStack: GameAction[] = [];
+  private totalRollCount = 0;
+  private rollStats: { [key: number]: number } = {};
   private isRolling: boolean;
-  private actionCallback: (gameActions: GameAction[]) => void;
+  private gameEvents: EventData[];
   private eventEmitter: EventEmitter;
 
-  constructor(
-    currentPlayer: Player,
-    players: Player[],
-    playMode = PLAY_MODE.FORWARD_MULTI_PLAYER,
-    actionCallback = noop
-  ) {
-    this.players = players;
-    this.playMode = playMode;
+  constructor() {
+    this.gameEvents = [];
     this.isRolling = false;
-    this.actionCallback = actionCallback;
-    this.setCurrentPlayer(currentPlayer);
     this.eventEmitter = new EventEmitter();
   }
 
@@ -39,32 +25,32 @@ export class GameEngine {
   }
 
   dispatchAction(action: GameAction) {
-    console.log("dispatching action", action.type);
-    this.actionStack.unshift(action);
-
-    if (typeof this.actionCallback === "function") {
-      this.actionCallback(this.actionStack);
-    }
-
-    this.eventEmitter.emit(ACTION_TYPE.DISPATCH_ACTION, action);
-  }
-
-  startRoll(player: Player) {
-    console.log("startRoll", player.name);
-    this.isRolling = true;
-
-    this.dispatchAction({
+    const eventData = {
       id: nanoid(),
       date: new Date(),
-      type: ACTION_TYPE.ROLL_START,
-      playerInitated: player,
-    });
-    this.logStatus();
+      ...action,
+    } as EventData;
+    this.gameEvents.unshift(eventData);
+    this.eventEmitter.emit(action.type, eventData);
+  }
+
+  getGameEvents(): EventData[] {
+    return this.gameEvents;
+  }
+
+  clearEventData() {
+    this.gameEvents = [];
+  }
+
+  startRoll() {
+    this.isRolling = true;
+
+    this.dispatchAction({ type: ACTION_TYPE.ROLL_START });
 
     // TEMPORARY FAKE ROLLER MECHANISM
     // TODO: Replace this with a cool threejs dice simulation
     setTimeout(() => {
-      this.rollComplete(2, player);
+      this.rollComplete(2);
     }, 1000);
   }
 
@@ -72,146 +58,52 @@ export class GameEngine {
     this.isRolling = false;
   }
 
-  rollComplete(value: number[] | number, player: Player) {
-    console.log("rollComplete", player.name);
+  rollComplete(value: number[] | number) {
     this.isRolling = false;
-    this.rollCount += 1;
-    this.advanceToNextPlayer();
+    this.totalRollCount += 1;
+
+    this.updateRollStats(value);
 
     this.dispatchAction({
-      id: nanoid(),
-      date: new Date(),
       value,
       type: ACTION_TYPE.ROLL_COMPLETED,
-      playerInitated: player,
     });
-
-    this.eventEmitter.emit(ACTION_TYPE.ROLL_COMPLETED, this.getCurrentPlayer());
-    this.logStatus();
   }
 
   getIsRolling() {
     return this.isRolling;
   }
 
-  skip(player: Player) {
-    this.cancelRoll();
-
-    this.dispatchAction({
-      id: nanoid(),
-      date: new Date(),
-      type: ACTION_TYPE.ROLL_SKIP,
-      playerInitated: player,
-    });
-
-    this.advanceToNextPlayer();
-    this.skipCount += 1;
-
-    this.eventEmitter.emit(ACTION_TYPE.ROLL_SKIP, this.getCurrentPlayer());
-  }
-
   reset() {
-    // TODO log the reset
-    this.currentPlayerIndex = 0;
-    this.skipCount = 0;
-    this.rollCount = 0;
-    this.eventEmitter.emit(ACTION_TYPE.RESET_GAME);
+    this.totalRollCount = 0;
+    this.clearEventData();
+    this.resetRollStats();
+    this.dispatchAction({ type: ACTION_TYPE.RESET_GAME });
   }
 
-  addPlayer(player: Player) {
-    this.players.push(player);
-    this.eventEmitter.emit(ACTION_TYPE.PLAYER_ADDED, player);
+  private resetRollStats() {
+    this.rollStats = {};
   }
 
-  removePlayer(playerToRemove: Player) {
-    const playerIndexToRemove = this.players.findIndex(
-      (player) => player.id === playerToRemove.id
-    );
+  private updateRollStatValue(key: number) {
+    if (typeof key === "number") {
+      if (!this.rollStats[key]) {
+        this.rollStats[key] = 0;
+      }
+      this.rollStats[key] += 1;
+    }
+  }
 
-    if (playerIndexToRemove === -1) {
-      // Player not found
+  private updateRollStats(rollValue: number | number[]) {
+    if (typeof rollValue === "number") {
+      this.updateRollStatValue(rollValue);
       return;
     }
 
-    // Remove the player from the list
-    this.players = this.players.toSpliced(playerIndexToRemove, 1);
-
-    // Adjust the playerIndex if necessary
-    if (this.players.length === 0) {
-      this.currentPlayerIndex = 0;
-    } else if (playerIndexToRemove < this.currentPlayerIndex) {
-      this.currentPlayerIndex -= 1;
-    } else if (playerIndexToRemove === this.currentPlayerIndex) {
-      // If the removed player is the current player, set the current player to the new index
-      this.currentPlayerIndex = this.currentPlayerIndex % this.players.length;
+    if (Array.isArray(rollValue)) {
+      rollValue.forEach((value) => {
+        this.updateRollStatValue(value);
+      });
     }
-
-    // Ensure playerIndex is within bounds
-    if (this.currentPlayerIndex >= this.players.length) {
-      this.currentPlayerIndex = 0;
-    }
-
-    this.dispatchAction({
-      id: nanoid(),
-      date: new Date(),
-      type: ACTION_TYPE.PLAYER_REMOVED,
-      playerInitated: playerToRemove,
-    });
-
-    this.eventEmitter.emit(ACTION_TYPE.PLAYER_REMOVED, playerToRemove);
-    this.logStatus();
-  }
-
-  logStatus() {
-    console.log({
-      players: this.players,
-      currentPlayerIndex: this.currentPlayerIndex,
-      isRolling: this.isRolling,
-    });
-  }
-
-  getPlayers() {
-    return this.players;
-  }
-
-  getCurrentPlayer(): Player {
-    return this.players[this.currentPlayerIndex];
-  }
-
-  setCurrentPlayer(player: Player) {
-    const index = this.players.findIndex((p) => p.id === player.id);
-    if (index !== -1) {
-      this.currentPlayerIndex = index;
-    }
-  }
-
-  getNextPlayerIndex(): number {
-    if (
-      this.players.length === 1 ||
-      this.playMode === PLAY_MODE.SINGLE_PLAYER
-    ) {
-      return this.currentPlayerIndex;
-    } else if (this.playMode === PLAY_MODE.FORWARD_MULTI_PLAYER) {
-      return (this.currentPlayerIndex + 1) % this.players.length;
-    } else if (this.playMode === PLAY_MODE.REVERSE_MULTI_PLAYER) {
-      return (
-        (this.currentPlayerIndex - 1 + this.players.length) %
-        this.players.length
-      );
-    }
-
-    return this.currentPlayerIndex;
-  }
-
-  advanceToNextPlayer() {
-    this.currentPlayerIndex = this.getNextPlayerIndex();
-    this.eventEmitter.emit(
-      ACTION_TYPE.ADDVANCE_TO_NEW_PLAYER,
-      this.getCurrentPlayer()
-    );
-  }
-
-  registerActionCallback(callback: (gameAction: GameAction[]) => void) {
-    this.actionCallback = callback;
   }
 }

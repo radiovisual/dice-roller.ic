@@ -1,64 +1,55 @@
 import { useEffect, useState } from "react";
-import pkg from "../package.json";
-import { PlayerTable } from "./components/player-table";
-import { Log } from "./components/log";
-import type { Player, GameAction } from "./types";
+
 import { GameEngine } from "./classes/game-engine";
+import { PlayLog } from "./components/play-log";
+import { ActionButtons } from "./components/action-buttons";
+import { ACTION_TYPE } from "./constants";
+import { EventData } from "./classes/event-emitter";
+import pkg from "../package.json";
 
 import "./App.css";
 
-import { CollapsableCard } from "./components/collapsable-card";
-import { ActionButtons } from "./components/action-buttons";
-import { getDefaultPlayers } from "./utils/player.utils";
-import { ACTION_TYPE } from "./constants";
-import { EventCallback, EventData } from "./classes/event-emitter";
-
-const defaultPlayers = getDefaultPlayers();
-
-const gameEngine = new GameEngine(defaultPlayers[0], defaultPlayers);
+const gameEngine = new GameEngine();
 
 function App() {
-  const [currentPlayer, setCurrentPlayer] = useState<Player>(defaultPlayers[0]);
-  const [logItems, setLogItems] = useState<GameAction[]>([]);
-  const [players, setPlayers] = useState<Player[]>(defaultPlayers);
+  const [logItems, setLogItems] = useState<EventData[]>([]);
+  const [isRolling, setIsRolling] = useState(false);
+
+  const handleUpdateLogItems = () => {
+    setLogItems(gameEngine.getGameEvents());
+  };
+
+  const handleRollStart = () => {
+    setIsRolling(true);
+  };
+
+  const handleRollComplete = () => {
+    setIsRolling(false);
+  };
 
   useEffect(() => {
     console.log("mounting app and registering listener");
-    gameEngine.registerActionCallback(setLogItems);
 
-    const handlePlayerChange: EventCallback = (data: EventData) => {
-      if (data) {
-        setCurrentPlayer(data as Player);
-      }
-    };
-
-    const handlePlayerListChange = () => {
-      setPlayers(gameEngine.getPlayers());
-    };
-
-    gameEngine.on(ACTION_TYPE.ROLL_COMPLETED, handlePlayerChange);
-    gameEngine.on(ACTION_TYPE.ROLL_SKIP, handlePlayerChange);
-    gameEngine.on(ACTION_TYPE.PLAYER_REMOVED, handlePlayerListChange);
-    gameEngine.on(ACTION_TYPE.ADDVANCE_TO_NEW_PLAYER, handlePlayerChange);
+    gameEngine.on(ACTION_TYPE.ROLL_START, handleRollStart);
+    gameEngine.on(ACTION_TYPE.ROLL_START, handleUpdateLogItems);
+    gameEngine.on(ACTION_TYPE.ROLL_COMPLETED, handleUpdateLogItems);
+    gameEngine.on(ACTION_TYPE.ROLL_COMPLETED, handleRollComplete);
 
     return () => {
-      gameEngine.off(ACTION_TYPE.ROLL_COMPLETED, handlePlayerChange);
-      gameEngine.off(ACTION_TYPE.ROLL_SKIP, handlePlayerChange);
-      gameEngine.off(ACTION_TYPE.PLAYER_REMOVED, handlePlayerListChange);
-      gameEngine.off(ACTION_TYPE.ADDVANCE_TO_NEW_PLAYER, handlePlayerChange);
+      gameEngine.off(ACTION_TYPE.ROLL_START, handleRollStart);
+      gameEngine.off(ACTION_TYPE.ROLL_START, handleUpdateLogItems);
+      gameEngine.off(ACTION_TYPE.ROLL_COMPLETED, handleUpdateLogItems);
+      gameEngine.off(ACTION_TYPE.ROLL_COMPLETED, handleRollComplete);
     };
   }, []);
 
   const handleRollDiceClick = () => {
-    gameEngine.startRoll(currentPlayer);
+    gameEngine.startRoll();
   };
 
-  const handleSkipTurnClick = (player: Player) => {
-    gameEngine.skip(player);
-  };
-
-  const handleRemovePlayer = (player: Player) => {
-    gameEngine.removePlayer(player);
+  const handleClearPlayLog = () => {
+    gameEngine.clearEventData();
+    setLogItems([]);
   };
 
   return (
@@ -69,31 +60,14 @@ function App() {
 
       <div className="DiceRoller"></div>
 
-      <ActionButtons
-        currentPlayer={currentPlayer}
-        onRollDiceClick={handleRollDiceClick}
-        onSkipTurnClick={handleSkipTurnClick}
-      />
+      <div className="ActionRow">
+        <div className="CollapsableCards">
+          <div className="ActionButtons">
+            <ActionButtons onRollDiceClick={handleRollDiceClick} />
+          </div>
 
-      <div className="CollapsableCards">
-        <CollapsableCard
-          title="Player rotation"
-          buttonRow={[<button>+</button>, <button>X</button>]}
-        >
-          <PlayerTable
-            players={players}
-            currentPlayer={currentPlayer}
-            onRemovePlayer={handleRemovePlayer}
-            canDeletePlayers={players.length > 1}
-          />
-        </CollapsableCard>
-
-        <CollapsableCard
-          title="Play log"
-          buttonRow={[<button>C</button>, <button>X</button>]}
-        >
-          <Log logItems={logItems} />
-        </CollapsableCard>
+          <PlayLog logItems={logItems} onClearLogItems={handleClearPlayLog} />
+        </div>
       </div>
     </>
   );

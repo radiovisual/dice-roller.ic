@@ -1,6 +1,6 @@
 # dice-roller.ic
 
-> Roll some cool virtual dice with one or more players in this web application powered by the [Internet Computer](https://internetcomputer.org/). 🎲
+> Roll some cool virtual dice this web application powered by the [Internet Computer](https://internetcomputer.org/). 🎲
 
 ## Installation
 

@@ -1,12 +1,11 @@
-import { GameAction, Player } from "../types";
+import { nanoid } from "nanoid";
+import { GameAction } from "../types";
 
-export type EventData =
-  | string
-  | number
-  | { [key: string]: string | object }
-  | Player
-  | GameAction
-  | undefined;
+export interface EventData extends GameAction {
+  id: string;
+  date: Date;
+}
+
 export type EventCallback = (data: EventData) => void;
 
 export class EventEmitter {
@@ -25,9 +24,15 @@ export class EventEmitter {
     this.events[event] = this.events[event].filter((cb) => cb !== callback);
   }
 
-  emit(event: string, data?: EventData) {
+  emit(event: string, data: GameAction) {
     if (!this.events[event]) return;
 
-    this.events[event].forEach((callback) => callback(data));
+    const eventData = {
+      id: nanoid(),
+      date: new Date(),
+      ...(data ?? {}),
+    } as EventData;
+
+    this.events[event].forEach((callback) => callback(eventData));
   }
 }

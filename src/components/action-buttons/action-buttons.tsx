@@ -6,20 +6,14 @@ import { ActionButton } from "../action-button/action-button";
 import styles from "./action-buttons.module.css";
 
 export function ActionButtons(props: ActionButtonsProps) {
-  const { currentPlayer, onRollDiceClick, onSkipTurnClick } = props;
+  const { onRollDiceClick } = props;
 
   return (
     <div className={styles.ActionButtons}>
-      <span className={styles.name}>{currentPlayer?.name ?? ""}</span>
       <ActionButton
         variant="primary"
         label={"Roll the dice"}
-        onClick={() => onRollDiceClick(currentPlayer)}
-      />
-      <ActionButton
-        variant="secondary"
-        label={"Skip your turn"}
-        onClick={() => onSkipTurnClick(currentPlayer)}
+        onClick={onRollDiceClick}
       />
     </div>
   );

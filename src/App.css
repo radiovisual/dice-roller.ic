@@ -30,9 +30,20 @@
   justify-content: center;
   align-content: center;
   align-items: center;
+  width: 50%;
+}
+
+.ActionRow {
+  height: 250px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
 }
 
 .CollapsableCards {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: row;
 }
