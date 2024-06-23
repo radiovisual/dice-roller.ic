@@ -1,13 +1,8 @@
-<div align="center">
-  <h1>dice-roller.ic</h1>
-  <img src="media/dice-roller-logo.png" alt="Dice roller logo">
-</div>
+<img width="80" src="media/dice-roller-logo.png" alt="Dice roller logo">
+
+## dice-roller.ic
 
 > Roll some cool virtual dice in this web application powered by the <a href="https://internetcomputer.org">Internet Computer</a> 🎲
-
----
-
-<br>
 
 ## Installation
 
