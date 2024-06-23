@@ -1,7 +1,7 @@
 import { Player } from "../../types";
 
 export type ActionButtonsProps = {
-  currentPlayer: Player;
-  onRollDiceClick: () => void;
-  onSkipTurnClick: () => void;
+  currentPlayer?: Player;
+  onRollDiceClick: (player: Player) => void;
+  onSkipTurnClick: (player: Player) => void;
 };

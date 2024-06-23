@@ -10,16 +10,16 @@ export function ActionButtons(props: ActionButtonsProps) {
 
   return (
     <div className={styles.ActionButtons}>
-      <span className={styles.name}>{currentPlayer.name}</span>
+      <span className={styles.name}>{currentPlayer?.name ?? ""}</span>
       <ActionButton
         variant="primary"
         label={"Roll the dice"}
-        onClick={onRollDiceClick}
+        onClick={() => onRollDiceClick(currentPlayer)}
       />
       <ActionButton
         variant="secondary"
         label={"Skip your turn"}
-        onClick={onSkipTurnClick}
+        onClick={() => onSkipTurnClick(currentPlayer)}
       />
     </div>
   );

@@ -23,18 +23,18 @@ export function LogItem(props: LogItemProps) {
         {playerName} rolled a {value}
       </span>
     );
+  } else if (gameAction.type === ACTION_TYPE.ROLL_START) {
+    message = <span>{playerName} started a roll</span>;
+  } else if (gameAction.type === ACTION_TYPE.ROLL_SKIP) {
+    message = <span className={styles.red}>{playerName} was skipped</span>;
+  } else if (gameAction.type === ACTION_TYPE.PLAYER_REMOVED) {
+    message = <span className={styles.red}>{playerName} was removed</span>;
+  } else if (gameAction.type === ACTION_TYPE.MESSAGE || value) {
+    message = <span style={{ color: playerColor }}>{value}</span>;
   }
 
-  if (gameAction.type === ACTION_TYPE.ROLL_START) {
-    message = (
-      <span style={{ color: playerColor }}>{playerName} started a roll</span>
-    );
-  }
-
-  if (gameAction.type === ACTION_TYPE.ROLL_SKIP) {
-    message = (
-      <span style={{ color: playerColor }}>{playerName} was skipped</span>
-    );
+  if (!message) {
+    return;
   }
 
   return (
