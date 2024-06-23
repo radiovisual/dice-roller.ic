@@ -2,7 +2,7 @@
   "name": "dice-roller.ic",
   "private": true,
   "description": "Roll some virtual dice in this web application powered by the Internet Computer.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
