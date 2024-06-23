@@ -8,6 +8,7 @@ import { EventData } from "./classes/event-emitter";
 import pkg from "../package.json";
 
 import "./App.css";
+import { DiceRoller } from "./components/dice-roller";
 
 const gameEngine = new GameEngine();
 
@@ -53,13 +54,20 @@ function App() {
     setLogItems([]);
   };
 
+  const handleDiceThrowCompleted = () => {
+    console.log("handleDiceThrowCompleted");
+  };
+
   return (
     <>
       <div className="Header">
         Dice Roller 🎲 <code>v{pkg.version}</code>
       </div>
 
-      <div className="DiceRoller"></div>
+      <DiceRoller />
+      <div>
+        <h3>Final Results</h3>
+      </div>
 
       <div className="ActionRow">
         <div className="CollapsableCards">
