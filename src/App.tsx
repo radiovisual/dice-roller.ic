@@ -15,6 +15,7 @@ const gameEngine = new GameEngine();
 function App() {
   const [logItems, setLogItems] = useState<EventData[]>([]);
   const [isRolling, setIsRolling] = useState(false);
+  const [force, setForce] = useState(0);
 
   const handleUpdateLogItems = () => {
     setLogItems(gameEngine.getGameEvents());
@@ -29,8 +30,6 @@ function App() {
   };
 
   useEffect(() => {
-    console.log("mounting app and registering listener");
-
     gameEngine.on(ACTION_TYPE.ROLL_START, handleRollStart);
     gameEngine.on(ACTION_TYPE.ROLL_START, handleUpdateLogItems);
     gameEngine.on(ACTION_TYPE.ROLL_COMPLETED, handleUpdateLogItems);
@@ -45,8 +44,10 @@ function App() {
   }, []);
 
   const handleRollDiceClick = (rollStength: number) => {
-    console.log("Roll with strengh", rollStength);
-    gameEngine.startRoll(rollStength);
+    if (!isRolling) {
+      setForce(rollStength);
+      gameEngine.startRoll(rollStength);
+    }
   };
 
   const handleClearPlayLog = () => {
@@ -54,8 +55,9 @@ function App() {
     setLogItems([]);
   };
 
-  const handleDiceThrowCompleted = () => {
-    console.log("handleDiceThrowCompleted");
+  const handleDiceThrowCompleted = (result: number) => {
+    gameEngine.rollComplete(result);
+    setIsRolling(false);
   };
 
   return (
@@ -64,15 +66,15 @@ function App() {
         Dice Roller 🎲 <code>v{pkg.version}</code>
       </div>
 
-      <DiceRoller />
-      <div>
-        <h3>Final Results</h3>
-      </div>
+      <DiceRoller force={force} onRollComplete={handleDiceThrowCompleted} />
 
       <div className="ActionRow">
         <div className="CollapsableCards">
           <div className="ActionButtons">
-            <ActionButtons onRollDiceClick={handleRollDiceClick} />
+            <ActionButtons
+              disabled={isRolling}
+              onRollDiceClick={handleRollDiceClick}
+            />
           </div>
 
           <PlayLog logItems={logItems} onClearLogItems={handleClearPlayLog} />

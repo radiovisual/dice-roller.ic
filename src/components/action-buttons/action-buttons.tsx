@@ -6,11 +6,11 @@ import { ActionButton } from "../action-button/action-button";
 import styles from "./action-buttons.module.css";
 
 export function ActionButtons(props: ActionButtonsProps) {
-  const { onRollDiceClick } = props;
+  const { onRollDiceClick, disabled } = props;
 
   return (
     <div className={styles.ActionButtons}>
-      <ActionButton onClick={onRollDiceClick} />
+      <ActionButton onClick={onRollDiceClick} disabled={disabled} />
     </div>
   );
 }

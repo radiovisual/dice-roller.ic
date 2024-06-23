@@ -5,7 +5,7 @@ import type { ActionButtonProps } from "./types";
 import styles from "./action-button.module.css";
 
 export function ActionButton(props: ActionButtonProps) {
-  const { onClick } = props;
+  const { onClick, disabled } = props;
 
   const [strength, setStrength] = useState(0);
   const intervalRef = useRef<number | null>(null);
@@ -56,16 +56,17 @@ export function ActionButton(props: ActionButtonProps) {
         style={{
           height: 15,
           width: "100%",
-          borderRadius: 0,
+          borderRadius: 10,
           backgroundColor: "#ff0eac",
           cursor: "pointer",
         }}
       />
       <button
+        disabled={disabled}
         onMouseDown={startGrowing}
         onMouseUp={stopGrowing}
         onMouseLeave={stopGrowing}
-        className={styles.rollBtn}
+        className={`${styles.rollBtn} ${disabled ? styles.disabledBtn : ""}`}
       >
         Roll the Dice!
       </button>

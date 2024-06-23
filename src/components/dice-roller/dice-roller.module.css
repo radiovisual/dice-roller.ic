@@ -1,12 +1,12 @@
 .diceContainer {
-  background-color: pink;
+  background-color: black;
   width: 100%;
-  height: 53%;
+  height: 75%;
   display: flex;
-  justify-content: center;
-  justify-items: center;
+  justify-content: space-evenly;
   align-content: center;
   align-items: center;
+  flex-direction: column;
 }
 
 .dicePerspective {
@@ -21,8 +21,19 @@
   transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
 }
 
+.result {
+  display: block;
+  height: 1em;
+  font-size: 2em;
+}
+
+.resultNumber {
+  color: hotpink;
+}
+
 .face {
   color: black;
+  background-color: pink;
   position: absolute;
   width: 100px;
   height: 100px;
@@ -31,23 +42,30 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 2rem;
+  font-size: 3rem;
 }
+
 .front {
   transform: rotateY(0deg) translateZ(50px);
+  background: #18ffba;
 }
 .back {
-  transform: rotateY(180deg) translateZ(50px);
+  transform: rotateY(180deg) translateZ(50px) rotateZ(180deg);
+  background: #ff32b9;
 }
 .right {
   transform: rotateY(90deg) translateZ(50px);
+  background: #32ceff;
 }
 .left {
   transform: rotateY(-90deg) translateZ(50px);
+  background: #fbff32;
 }
 .top {
   transform: rotateX(90deg) translateZ(50px);
+  background: #32fff3;
 }
 .bottom {
   transform: rotateX(-90deg) translateZ(50px);
+  background: #e232ff;
 }

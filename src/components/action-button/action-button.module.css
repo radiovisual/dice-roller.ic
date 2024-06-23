@@ -4,7 +4,7 @@
 
 .rollBtn {
   border-radius: 8px;
-  border: 1px solid transparent;
+  border: 1px solid #d3ff00;
   padding: 1.6em 2.2em;
   font-size: 2em;
   font-weight: 500;
@@ -19,4 +19,8 @@
 
 .rollbtn:hover {
   background-color: #e7ff71;
+}
+
+.rollbtn:disabled {
+  background-color: #343434;
 }

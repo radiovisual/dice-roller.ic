@@ -47,14 +47,8 @@ export class GameEngine {
 
     this.dispatchAction({
       type: ACTION_TYPE.ROLL_START,
-      value: `(strength: ${rollStrength}%)`,
+      value: `(${rollStrength}%)`,
     });
-
-    // TEMPORARY FAKE ROLLER MECHANISM
-    // TODO: Replace this with a cool threejs dice simulation
-    setTimeout(() => {
-      this.rollComplete(2);
-    }, 1000);
   }
 
   cancelRoll() {
