@@ -4,17 +4,7 @@
   margin: 0 auto;
   font-size: 14px;
   padding: 0;
-}
-
-.Header {
-  background-color: #0d0d0d;
-  width: 100%;
-  padding: 10px;
-  border-bottom: dotted 1px #dfdfdf;
-}
-
-.Header-version {
-  color: #343434;
+  background-color: black;
 }
 
 .DiceRoller {
@@ -27,7 +17,8 @@
   display: flex;
   flex-direction: row;
   background-color: black;
-  border: solid thin gray;
+  border-top: dotted thin darkgray;
+  border-right: dotted thin darkgray;
   justify-content: center;
   align-content: center;
   align-items: center;
@@ -35,7 +26,7 @@
 }
 
 .ActionRow {
-  height: 250px;
+  height: 350px;
   position: absolute;
   bottom: 0;
   left: 0;

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import styles from "./dice-roller.module.css";
 import { DiceRollerProps } from "./types";
@@ -30,34 +30,37 @@ export const DiceRoller = (props: DiceRollerProps) => {
   const baseDuration = 1;
   const baseRotations = 3;
 
+  const rollDice = useCallback(
+    (force: number) => {
+      const randomSeed = seededRandom(force);
+      const targetFace = Math.floor(randomSeed * 6) + 1;
+
+      // Calculate extra rotations and duration based on force
+      const extraRotations =
+        baseRotations + Math.floor((force / 100) * (force * 0.7));
+      const durationInSeconds = baseDuration + (force / 100) * 1.2;
+
+      const randomRotation = [
+        360 * extraRotations + faces[targetFace][0],
+        360 * extraRotations + faces[targetFace][1],
+        360 * extraRotations + faces[targetFace][2],
+      ];
+
+      setRotation(randomRotation);
+
+      setTimeout(() => {
+        setResult(targetFace);
+        onRollComplete(targetFace);
+      }, durationInSeconds * 1000);
+    },
+    [onRollComplete]
+  );
+
   useEffect(() => {
-    if (force !== undefined && force !== null) {
+    if (force) {
       rollDice(force);
     }
-  }, [force]);
-
-  const rollDice = (force: number) => {
-    const randomSeed = seededRandom(force);
-    const targetFace = Math.floor(randomSeed * 6) + 1;
-
-    // Calculate extra rotations and duration based on force
-    const extraRotations =
-      baseRotations + Math.floor((force / 100) * (force * 1.2));
-    const durationInSeconds = baseDuration + (force / 100) * 2;
-
-    const randomRotation = [
-      360 * extraRotations + faces[targetFace][0],
-      360 * extraRotations + faces[targetFace][1],
-      360 * extraRotations + faces[targetFace][2],
-    ];
-
-    setRotation(randomRotation);
-
-    setTimeout(() => {
-      setResult(targetFace);
-      onRollComplete(targetFace);
-    }, durationInSeconds * 1000);
-  };
+  }, [force, rollDice]);
 
   return (
     <div className={styles.diceContainer}>
