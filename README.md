@@ -27,6 +27,22 @@ npm run dev
 
 Then open up the browser url that is diplayed in the terminal, for example: [http://localhost:5173/](http://localhost:5173/)
 
+## Deployment
+
+Make sure you have the [IC SDK](https://internetcomputer.org/docs/current/developer-docs/setup/install/) installed.
+
+Start the local replica with the DFX command:
+
+```
+dfx start --background
+```
+
+When the local replica is up and running, run this command to deploy the canisters:
+
+```
+dfx deploy
+```
+
 ---
 
 🎲 ❤️
