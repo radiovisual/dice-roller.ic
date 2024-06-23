@@ -14,8 +14,8 @@
 }
 
 .dice {
-  width: 100px;
-  height: 100px;
+  width: 200px;
+  height: 200px;
   position: relative;
   transform-style: preserve-3d;
   transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
@@ -35,37 +35,42 @@
   color: black;
   background-color: pink;
   position: absolute;
-  width: 100px;
-  height: 100px;
+  width: 200px;
+  height: 200px;
   background: white;
   border: 1px solid #000;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 3rem;
+  font-size: 9rem;
 }
 
 .front {
-  transform: rotateY(0deg) translateZ(50px);
+  transform: rotateY(0deg) translateZ(100px);
   background: #18ffba;
 }
+
 .back {
-  transform: rotateY(180deg) translateZ(50px) rotateZ(180deg);
+  transform: rotateY(180deg) translateZ(100px) rotateZ(180deg);
   background: #ff32b9;
 }
+
 .right {
-  transform: rotateY(90deg) translateZ(50px);
+  transform: rotateY(90deg) translateZ(100px);
   background: #32ceff;
 }
+
 .left {
-  transform: rotateY(-90deg) translateZ(50px);
+  transform: rotateY(-90deg) translateZ(100px);
   background: #fbff32;
 }
+
 .top {
-  transform: rotateX(90deg) translateZ(50px);
+  transform: rotateX(90deg) translateZ(100px);
   background: #32fff3;
 }
+
 .bottom {
-  transform: rotateX(-90deg) translateZ(50px);
+  transform: rotateX(-90deg) translateZ(100px);
   background: #e232ff;
 }
