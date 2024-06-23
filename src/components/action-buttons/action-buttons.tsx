@@ -1,5 +1,3 @@
-import React from "react";
-
 import type { ActionButtonsProps } from "./types";
 import { ActionButton } from "../action-button/action-button";
 

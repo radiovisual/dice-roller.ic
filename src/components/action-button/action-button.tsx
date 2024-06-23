@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { motion, useAnimation } from "framer-motion";
 import type { ActionButtonProps } from "./types";
 

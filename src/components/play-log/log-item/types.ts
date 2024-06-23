@@ -1,5 +1,5 @@
-import { GameAction } from "../../types";
+import { EventData } from "../../../classes/event-emitter";
 
 export type LogItemProps = {
-  gameAction: GameAction;
+  gameAction: EventData;
 };

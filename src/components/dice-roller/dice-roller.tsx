@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import styles from "./dice-roller.module.css";
 import { DiceRollerProps } from "./types";
 
-const faces = {
+type Faces = {
+  [key: number]: number[];
+};
+
+const faces: Faces = {
   1: [10, 10, 0],
   2: [-80, 10, 0],
   3: [10, -80, 0],
@@ -21,7 +25,6 @@ export const DiceRoller = (props: DiceRollerProps) => {
   const { force, onRollComplete } = props;
 
   const [rotation, setRotation] = useState([0, 0, 0]);
-  const [rolling, setRolling] = useState(false);
   const [result, setResult] = useState<number | null>(null);
 
   const baseDuration = 1;
@@ -49,9 +52,8 @@ export const DiceRoller = (props: DiceRollerProps) => {
     ];
 
     setRotation(randomRotation);
-    setRolling(true);
+
     setTimeout(() => {
-      setRolling(false);
       setResult(targetFace);
       onRollComplete(targetFace);
     }, durationInSeconds * 1000);
