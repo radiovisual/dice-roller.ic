@@ -43,8 +43,9 @@ function App() {
     };
   }, []);
 
-  const handleRollDiceClick = () => {
-    gameEngine.startRoll();
+  const handleRollDiceClick = (rollStength: number) => {
+    console.log("Roll with strengh", rollStength);
+    gameEngine.startRoll(rollStength);
   };
 
   const handleClearPlayLog = () => {

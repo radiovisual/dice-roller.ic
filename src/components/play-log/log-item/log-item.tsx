@@ -17,7 +17,7 @@ export function LogItem(props: LogItemProps) {
   if (gameAction.type === ACTION_TYPE.ROLL_COMPLETED) {
     message = <span>You rolled a {value}</span>;
   } else if (gameAction.type === ACTION_TYPE.ROLL_START) {
-    message = <span>A roll was started</span>;
+    message = <span>A roll was started {value}</span>;
   } else if (gameAction.type === ACTION_TYPE.MESSAGE || value) {
     message = <span>{value}</span>;
   }

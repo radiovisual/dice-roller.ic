@@ -10,11 +10,7 @@ export function ActionButtons(props: ActionButtonsProps) {
 
   return (
     <div className={styles.ActionButtons}>
-      <ActionButton
-        variant="primary"
-        label={"Roll the dice"}
-        onClick={onRollDiceClick}
-      />
+      <ActionButton onClick={onRollDiceClick} />
     </div>
   );
 }

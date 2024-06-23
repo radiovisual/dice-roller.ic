@@ -1,0 +1,22 @@
+.ActionButton {
+  width: 100%;
+}
+
+.rollBtn {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 1.6em 2.2em;
+  font-size: 2em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #d3ff00;
+  cursor: pointer;
+  transition: border-color 0.25s;
+  color: black;
+  margin: 2px;
+  margin-bottom: 2px;
+}
+
+.rollbtn:hover {
+  background-color: #e7ff71;
+}

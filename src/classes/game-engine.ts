@@ -42,10 +42,13 @@ export class GameEngine {
     this.gameEvents = [];
   }
 
-  startRoll() {
+  startRoll(rollStrength = 0) {
     this.isRolling = true;
 
-    this.dispatchAction({ type: ACTION_TYPE.ROLL_START });
+    this.dispatchAction({
+      type: ACTION_TYPE.ROLL_START,
+      value: `(strength: ${rollStrength}%)`,
+    });
 
     // TEMPORARY FAKE ROLLER MECHANISM
     // TODO: Replace this with a cool threejs dice simulation

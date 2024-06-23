@@ -1,3 +1,3 @@
 export type ActionButtonsProps = {
-  onRollDiceClick: () => void;
+  onRollDiceClick: (rollStength: number) => void;
 };
