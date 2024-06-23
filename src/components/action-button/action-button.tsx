@@ -15,9 +15,11 @@ export function ActionButton(props: ActionButtonProps) {
   const startGrowing = () => {
     setIsPressed(true);
     setStrength(0);
+
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
+
     intervalRef.current = window.setInterval(() => {
       setStrength((prev) => {
         if (prev >= 100) {
@@ -62,7 +64,6 @@ export function ActionButton(props: ActionButtonProps) {
         }}
       />
       <button
-        disabled={disabled}
         onMouseDown={startGrowing}
         onMouseUp={stopGrowing}
         onMouseLeave={stopGrowing}

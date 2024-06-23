@@ -4,12 +4,12 @@ import styles from "./dice-roller.module.css";
 import { DiceRollerProps } from "./types";
 
 const faces = {
-  1: [0, 0, 0],
-  2: [-90, 0, 0],
-  3: [0, -90, 0],
-  4: [0, 90, 0],
-  5: [90, 0, 0],
-  6: [180, 0, 0],
+  1: [10, 10, 0],
+  2: [-80, 10, 0],
+  3: [10, -80, 0],
+  4: [10, 80, 0],
+  5: [100, 10, 0],
+  6: [190, 10, 0],
 };
 
 function seededRandom(seed: number): number {
@@ -59,26 +59,27 @@ export const DiceRoller = (props: DiceRollerProps) => {
 
   return (
     <div className={styles.diceContainer}>
-      <motion.div
-        className={styles.dice}
-        animate={{
-          rotateX: rotation[0],
-          rotateY: rotation[1],
-          rotateZ: rotation[2],
-        }}
-        transition={{
-          duration: baseDuration + (force / 100) * 2,
-          ease: "easeInOut",
-        }}
-      >
-        <div className={`${styles.face} ${styles.front}`}>1</div>
-        <div className={`${styles.face} ${styles.back}`}>6</div>
-        <div className={`${styles.face} ${styles.left}`}>4</div>
-        <div className={`${styles.face} ${styles.right}`}>3</div>
-        <div className={`${styles.face} ${styles.top}`}>2</div>
-        <div className={`${styles.face} ${styles.bottom}`}>5</div>
-      </motion.div>
-
+      <div className={styles.dicePerspective}>
+        <motion.div
+          className={styles.dice}
+          animate={{
+            rotateX: rotation[0],
+            rotateY: rotation[1],
+            rotateZ: rotation[2],
+          }}
+          transition={{
+            duration: baseDuration + (force / 100) * 2,
+            ease: "easeInOut",
+          }}
+        >
+          <div className={`${styles.face} ${styles.front}`}>1</div>
+          <div className={`${styles.face} ${styles.back}`}>6</div>
+          <div className={`${styles.face} ${styles.left}`}>4</div>
+          <div className={`${styles.face} ${styles.right}`}>3</div>
+          <div className={`${styles.face} ${styles.top}`}>2</div>
+          <div className={`${styles.face} ${styles.bottom}`}>5</div>
+        </motion.div>
+      </div>
       <div className={styles.result}>
         You rolled a: <span className={styles.resultNumber}>{result}</span>
       </div>

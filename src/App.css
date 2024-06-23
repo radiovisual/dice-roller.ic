@@ -7,9 +7,10 @@
 }
 
 .Header {
-  background-color: #202020;
+  background-color: #0d0d0d;
   width: 100%;
   padding: 10px;
+  border-bottom: dotted 1px #dfdfdf;
 }
 
 .Header-version {
